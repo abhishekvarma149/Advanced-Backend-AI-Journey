@@ -149,6 +149,12 @@ docker rm <container_id>
 docker rmi <image_id>
 ```
 
+### Execute the container
+
+```bash
+docker exec -it <container_id> bash
+```
+
 ---
 
 ## Key Learnings
