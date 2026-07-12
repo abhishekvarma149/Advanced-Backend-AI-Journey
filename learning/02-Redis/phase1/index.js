@@ -6,6 +6,8 @@ import dotenv from "dotenv";
 import connectDb from "./lib/db.js";
 import Redis from "ioredis";
 import rateLimit from "./middleware/ratelimit.js";
+import sendEmail from "./lib/sendMail.js";
+import emailQueue from "./queue.js";
 dotenv.config();
 
 const port = process.env.PORT || 3000;
@@ -27,6 +29,12 @@ app.post("/create",async (req,res)=>{
     const user = await User.create({
         name,email,password
     })
+
+    // await sendEmail(); // send email after user is created
+
+    await emailQueue.add("send-Email",{email}) // add the job to the queue
+
+    
     return res.json(user)
 })
 // used middleware to limit the number of requests from a single IP address
