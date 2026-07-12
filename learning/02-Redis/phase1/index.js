@@ -5,6 +5,7 @@ import express from "express";
 import dotenv from "dotenv";
 import connectDb from "./lib/db.js";
 import Redis from "ioredis";
+import rateLimit from "./middleware/ratelimit.js";
 dotenv.config();
 
 const port = process.env.PORT || 3000;
@@ -28,8 +29,8 @@ app.post("/create",async (req,res)=>{
     })
     return res.json(user)
 })
-
-app.get("/get",async (req,res)=>{
+// used middleware to limit the number of requests from a single IP address
+app.get("/get",rateLimit,async (req,res)=>{
     const user = await User.find();
     return res.json(user)
 })
